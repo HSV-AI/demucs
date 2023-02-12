@@ -1,0 +1,6 @@
+Had to install ffmpeg to run training. Need to add to docker image
+
+Also need to upgrade pip in image
+?>pip install --upgrade pip
+
+pip install torchaudio -f https://download.pytorch.org/whl/torch_stable.html
