@@ -16,4 +16,4 @@ torch
 torchaudio
 tqdm
 treetable
-soundfile>=0.10.3;sys_platform=="win32"
+soundfile>=0.10.3

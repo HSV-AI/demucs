@@ -5,11 +5,19 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.9",
 
+	// "runArgs": [
+	// 	"--gpus",
+	// 	"all",
+	// 	"--shm-size",
+	// 	"2G"
+	// ],
+
 	"runArgs": [
 		"--gpus",
-		"all"
+		"all",
+		"--shm-size",
+		"8G"
 	],
-
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
@@ -17,7 +25,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "pip3 install --user -r requirements.txt"
+	"postCreateCommand": "python -m pip install --upgrade pip; python -m pip cache purge; pip install -r requirements.txt"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
