@@ -10,9 +10,9 @@ dummy:
 dset:
   musdb: /workspaces/demucs/data/moisesdb23_labelnoise_v1.0
   musdb_samplerate: 44100
-  wav:  # path to custom wav dataset
+  wav: /workspaces/demucs/data/moisesdb23_labelnoise_automix # path to custom wav dataset
   wav2:  # second custom wav dataset
-  segment: 11
+  segment: 10 #11
   shift: 1
   train_valid: false
   full_cv: true
@@ -26,8 +26,8 @@ dset:
 test:
   save: False
   best: True
-  workers: 2
-  every: 20
+  workers: 1
+  every: 50
   split: true
   shifts: 1
   overlap: 0.25
@@ -35,7 +35,7 @@ test:
   metric: 'loss'  # metric used for best model selection on the valid set, can also be nsdr
   nonhq:   # path to non hq MusDB for evaluation
 
-epochs: 10 #360
+epochs: 100 #360
 batch_size: 4 #64
 max_batches:  # limit the number of batches per epoch, useful for debugging
               # or if your dataset is gigantic.
@@ -89,7 +89,7 @@ ema:
 
 use_train_segment: true  # to remove
 model_segment:  # override the segment parameter for the model, usually 4 times the training segment.
-model: hdemucs  # see demucs/train.py for the possibilities, and config for each model hereafter.
+model: htdemucs  # see demucs/train.py for the possibilities, and config for each model hereafter.
 demucs:  # see demucs/demucs.py for a detailed description
   # Channels
   channels: 64

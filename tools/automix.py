@@ -34,7 +34,7 @@ from demucs.wav import build_metadata, Wavset, _get_musdb_valid
 
 
 MUSDB_PATH = '/workspaces/demucs/data/moisesdb23_labelnoise_v1.0'
-EXTRA_WAV_PATH = "/checkpoint/defossez/datasets/allstems_44"
+# EXTRA_WAV_PATH = "/checkpoint/defossez/datasets/allstems_44"
 # WARNING: OUTPATH will be completely erased.
 OUTPATH = Path.home() / 'tmp/demucs_mdx/automix_musdb/'
 CACHE = Path.home() / 'tmp/automix_cache'  # cache BPM and pitch information.
@@ -58,7 +58,8 @@ def rms(wav, window=10000):
 
 def analyse_track(dset, index):
     """analyse track, extract bpm and distribution of notes from the bass line."""
-    track = dset[index]
+    track, name = dset[index]
+    print(f'Analyzing {name}')
     mix = track.sum(0).mean(0)
     ref = mix.std()
 
@@ -78,7 +79,7 @@ def analyse_track(dset, index):
     if cached is None:
         drums = track[0].mean(0)
         if drums.std() > 1e-2 * ref:
-            tempo, events = beat_track(drums.numpy(), units='time', sr=SR)
+            tempo, events = beat_track(y=drums.numpy(), units='time', sr=SR)
         else:
             print("failed drums", drums.std(), ref)
             return None, track
@@ -89,7 +90,7 @@ def analyse_track(dset, index):
         mask = r >= 0.05 * peak
         bass = bass[mask]
         if bass.std() > 1e-2 * ref:
-            kr = torch.from_numpy(chroma_cqt(bass.numpy(), sr=SR))
+            kr = torch.from_numpy(chroma_cqt(y=bass.numpy(), sr=SR))
             hist_kr = (kr.max(dim=0, keepdim=True)[0] == kr).float().mean(1)
         else:
             print("failed bass", bass.std(), ref)
@@ -295,21 +296,21 @@ def main():
     copies = 6
     copies_rej = 2
 
-    with ProcessPoolExecutor(20) as pool:
-        for index in range(len(dset)):
-            pendings.append(pool.submit(analyse_track, dset, index))
-
-        if dset2:
-            for index in range(len(dset2)):
-                pendings.append(pool.submit(analyse_track, dset2, index))
-        if dset3:
-            for index in range(len(dset3)):
-                pendings.append(pool.submit(analyse_track, dset3, index))
-
+    with ProcessPoolExecutor(1) as pool:
         catalog = []
         rej = 0
-        for pending in tqdm.tqdm(pendings, ncols=120):
-            spec, track = pending.result()
+        for index in range(len(dset)):
+            # pendings.append(pool.submit(analyse_track, dset, index))
+            spec, track = analyse_track(dset, index)
+        # if dset2:
+        #     for index in range(len(dset2)):
+        #         pendings.append(pool.submit(analyse_track, dset2, index))
+        # if dset3:
+        #     for index in range(len(dset3)):
+        #         pendings.append(pool.submit(analyse_track, dset3, index))
+
+        # for pending in tqdm.tqdm(pendings, ncols=120):
+            # spec, track = pending.result()
             if spec is not None:
                 catalog.append(spec)
             else:

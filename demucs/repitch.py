@@ -33,7 +33,7 @@ class RepitchedWrapper:
         return len(self.dataset)
 
     def __getitem__(self, index):
-        streams = self.dataset[index]
+        streams, name = self.dataset[index]
         in_length = streams.shape[-1]
         out_length = int((1 - 0.01 * self.max_tempo) * in_length)
 

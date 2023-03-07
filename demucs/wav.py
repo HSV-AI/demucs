@@ -170,7 +170,7 @@ class Wavset:
                 length = int(self.segment * self.samplerate)
                 example = example[..., :length]
                 example = F.pad(example, (0, length - example.shape[-1]))
-            return example
+            return example, name
 
 
 def get_wav_datasets(args, name='wav'):

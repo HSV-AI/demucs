@@ -11,6 +11,15 @@
             "module": "demucs.train",
             "justMyCode": true,
             "env": {"NUMBA_NUM_THREADS": "1"}
+        },
+        {
+            "name": "Automix",
+            "type": "python",
+            "request": "launch",
+            "module": "tools.automix",
+            "justMyCode": true,
+            "env": {"NUMBA_NUM_THREADS": "1"}
         }
+
     ]
 }
